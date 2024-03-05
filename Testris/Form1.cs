@@ -972,11 +972,18 @@ namespace Testris
                 Bgm_sound_st(ref bgm);
                 geme_ov.Start();
                 init_object();
+                Field=new int[20,10];
                 Write_field_data();
                 Exist_hold = false;
                 Exist_use_hold = false;
+                User_formation.score = 0;
+                //得点初期化
+                Write_score();
             }
         }
+
+        
+
 
         //次のブロックを運ぶ
         private void Migrate_reserve_block()
