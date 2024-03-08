@@ -1265,7 +1265,6 @@ namespace Testris
             mciSendString(cmd, null, 0, IntPtr.Zero);
 
             cmd = "setaudio effect" + " volume to " + User_formation.effect_volume.ToString();
-            cmd = "setaudio effect" + " volume to " + User_formation.bgm_volume.ToString();
             mciSendString(cmd, null, 0, IntPtr.Zero);
         }
 
