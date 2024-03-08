@@ -85,6 +85,7 @@ namespace Testris
             {
                 Main_panel.Controls.RemoveAt(Main_panel.Controls.Count-1);
             }
+            Control_count = 0;
         }
 
 
