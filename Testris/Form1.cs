@@ -24,7 +24,7 @@ namespace Testris
         //フィールド
         private int[,] Field = new int[20, 10];
         private Point Cur_point = new Point();
-        private int timer=3;
+        private int timer = 3;
         private int Rotate_num;
         private int Control_count;
         private bool Exist_hold;
@@ -40,10 +40,10 @@ namespace Testris
         {
             string bgm_name = "game";
             Bgm_sound_st(ref bgm_name);
-            bgm_name ="countdown";
+            bgm_name = "countdown";
             effect_sound_st(ref bgm_name);
             reset_btn.Visible = false;
-            setting_btn.Visible=false;
+            setting_btn.Visible = false;
             st_label.Visible = true;
             start_btn.Visible = false;
             st_wait_timer.Start();
@@ -81,9 +81,9 @@ namespace Testris
         {
             Field = new int[20, 10];
             start_btn.Visible = true;
-            for (int i=0;i<Control_count;i++)
+            for (int i = 0; i < Control_count; i++)
             {
-                Main_panel.Controls.RemoveAt(Main_panel.Controls.Count-1);
+                Main_panel.Controls.RemoveAt(Main_panel.Controls.Count - 1);
             }
             Control_count = 0;
         }
@@ -124,10 +124,10 @@ namespace Testris
             using (StreamWriter sw = new StreamWriter(@"Resources\fielddata.csv", false,
                                                       Encoding.GetEncoding("utf-8")))
             {
-                string line="";
-                for (int i=0;i<20;i++)
+                string line = "";
+                for (int i = 0; i < 20; i++)
                 {
-                    for (int j=0;j<10;j++)
+                    for (int j = 0; j < 10; j++)
                     {
                         if (Field[i, j] >= 0)
                         {
@@ -137,7 +137,7 @@ namespace Testris
                         {
                             line += "0";
                         }
-                        
+
                     }
                     sw.WriteLine(line);
                     line = "";
@@ -401,6 +401,8 @@ namespace Testris
             else if (e.KeyCode.ToString() == Key_bind.rotate_right)
             {
                 //右回転
+                if (Can_move_left() == false && Can_move_right() == false) return;
+
                 Move_Rotate_right();
 
                 Change_opa_block();
@@ -409,6 +411,9 @@ namespace Testris
             else if (e.KeyCode.ToString() == Key_bind.rotate_left)
             {
                 //左回転
+
+                if (Can_move_left() == false && Can_move_right() == false) return;
+
                 Move_Rotate_left();
 
                 Change_opa_block();
@@ -433,16 +438,15 @@ namespace Testris
 
             }
 
-            if (Game_over!=true)
+            if (Game_over != true)
             {
-                KeyPreview=true;
+                KeyPreview = true;
             }
 
         }
 
-
-        //右に動く
-        private void Move_right()
+        //右に移動できるか
+        private bool Can_move_right()
         {
             int count = 0;
             bool[] ok = new bool[4];
@@ -467,8 +471,22 @@ namespace Testris
 
             if (ok.All(n => n == true) == true)
             {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+        //右に動く
+        private void Move_right()
+        {
+            if (Can_move_right() == true)
+            {
                 Cur_point = new Point(Cur_point.X + 1, Cur_point.Y);
-                count = 0;
+                int count = 0;
                 for (int i = 0; i < 20; i++)
                 {
                     for (int j = 9; j >= 0; j--)
@@ -493,15 +511,12 @@ namespace Testris
 
                 if (methods.Can_soft_drop(ref Field) == true) dropped_jud_timer.Stop();
 
-            }
-            else
-            {
-                return;
+
             }
         }
 
-        //左に動く
-        private void Move_left()
+        //左に移動できるか
+        private bool Can_move_left()
         {
             int count = 0;
             bool[] ok = new bool[4];
@@ -526,8 +541,24 @@ namespace Testris
 
             if (ok.All(n => n == true) == true)
             {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+
+        //左に動く
+        private void Move_left()
+        {
+            if (Can_move_left() == true)
+            {
+
                 Cur_point = new Point(Cur_point.X - 1, Cur_point.Y);
-                count = 0;
+                int count = 0;
                 for (int i = 0; i < 20; i++)
                 {
                     for (int j = 0; j < 10; j++)
@@ -549,10 +580,8 @@ namespace Testris
                     cs[0].Location = new Point(cs[0].Location.X - Common.size, cs[0].Location.Y);
                 }
                 if (methods.Can_soft_drop(ref Field) == true) dropped_jud_timer.Stop();
-            }
-            else
-            {
-                return;
+
+
             }
         }
 
@@ -588,7 +617,7 @@ namespace Testris
                         {
                             if (work_form[i, j] > 0)
                             {
-                                if ((work_point.X + j) > 9 || (work_point.Y + i) > 19||(work_point.X<0)||(work_point.Y<0))
+                                if ((work_point.X + j) > 9 || (work_point.Y + i) > 19 || (work_point.X < 0) || (work_point.Y < 0))
                                 {
                                     over = true;
                                     break;
@@ -912,7 +941,7 @@ namespace Testris
                     }
 
                     Rotate_num = 0;
-                    Cur_point = new Point(3,0);
+                    Cur_point = new Point(3, 0);
                     Change_opa_block();
 
                 }
@@ -969,11 +998,11 @@ namespace Testris
             else
             {//ゲームオーバー
                 Game_over = true;
-                string bgm ="gameover";
+                string bgm = "gameover";
                 Bgm_sound_st(ref bgm);
                 geme_ov.Start();
                 init_object();
-                Field=new int[20,10];
+                Field = new int[20, 10];
                 Write_field_data();
                 Exist_hold = false;
                 Exist_use_hold = false;
@@ -983,7 +1012,7 @@ namespace Testris
             }
         }
 
-        
+
 
 
         //次のブロックを運ぶ
@@ -1044,11 +1073,11 @@ namespace Testris
             bool[] Colum_flag_arr = new bool[10];
             int count = 0;
 
-            for(int i = 0; i < 20; i++)
+            for (int i = 0; i < 20; i++)
             {
-                for (int j=0;j<10;j++)
+                for (int j = 0; j < 10; j++)
                 {
-                    if (Field[i,j]>0)
+                    if (Field[i, j] > 0)
                     {
                         Colum_flag_arr[j] = true;
                     }
@@ -1057,24 +1086,24 @@ namespace Testris
                 if (Colum_flag_arr.All(n => n == true) == true)
                 {
                     //一段消す
-                    for (int j=0;j<10;j++)
+                    for (int j = 0; j < 10; j++)
                     {
                         Control[] work = Main_panel.Controls.Find("obstacle" + i.ToString() + j.ToString(), true);
-                        if(work.Length>0) Main_panel.Controls.Remove(work[0]);
+                        if (work.Length > 0) Main_panel.Controls.Remove(work[0]);
                         Control_count--;
                     }
 
-                    for (int colum=0;colum<10;colum++) 
+                    for (int colum = 0; colum < 10; colum++)
                     {
                         for (int j = i; j >= 0; j--)
                         {
-                            if ((j-1)<0) break;
-                            Field[j, colum] = Field[j-1,colum];
-                            Control[] work = Main_panel.Controls.Find("obstacle"+(j-1).ToString()+colum.ToString(), true);
-                            if (work.Length>0)
+                            if ((j - 1) < 0) break;
+                            Field[j, colum] = Field[j - 1, colum];
+                            Control[] work = Main_panel.Controls.Find("obstacle" + (j - 1).ToString() + colum.ToString(), true);
+                            if (work.Length > 0)
                             {
-                                work[0].Name="obstacle"+j.ToString()+colum.ToString();
-                                work[0].Location = new Point(work[0].Location.X, work[0].Location.Y+Common.size) ;  
+                                work[0].Name = "obstacle" + j.ToString() + colum.ToString();
+                                work[0].Location = new Point(work[0].Location.X, work[0].Location.Y + Common.size);
 
                             }
                         }
@@ -1083,7 +1112,7 @@ namespace Testris
                     count++;
                     if (count == 4) break;
                 }
-                Colum_flag_arr= new bool[10];
+                Colum_flag_arr = new bool[10];
 
             }
             if (count > 0) Write_score();
@@ -1095,7 +1124,7 @@ namespace Testris
                 effect_sound_st(ref effe);
                 User_formation.score += 1;
             }
-            else if(count==2)
+            else if (count == 2)
             {
                 effect_sound_st(ref effe);
                 User_formation.score += 3;
@@ -1145,13 +1174,13 @@ namespace Testris
         {
             dropped_jud_timer.Stop();
             //next
-           Next_or_gameover();
+            Next_or_gameover();
         }
 
         private void reset_btn_MouseClick(object sender, MouseEventArgs e)
         {
             if (start_btn.Visible == true) return;
-            
+
             Bgm_stop();
             soft_drop_timer.Stop();
             dropped_jud_timer.Stop();
@@ -1177,11 +1206,11 @@ namespace Testris
             form.TopLevel = false;
             form.FormBorderStyle = FormBorderStyle.None;
             Main_panel.Controls.Add(form);
-            form.FormClosed +=Closed_form;
+            form.FormClosed += Closed_form;
             form.BringToFront();
             form.Show();
         }
-        private void Closed_form(object sender,EventArgs e )
+        private void Closed_form(object sender, EventArgs e)
         {
             Exist_hold = false;
             Exist_use_hold = false;
@@ -1192,14 +1221,14 @@ namespace Testris
         private void st_wait_timer_Tick(object sender, EventArgs e)
         {
             timer--;
-            if (timer==0)
+            if (timer == 0)
             {
                 //処理
                 Game_over = false;
                 Control_count = 0;
                 KeyPreview = true;
                 init_field();
-                timer= 3;
+                timer = 3;
                 st_label.Text = "3";
                 st_label.Visible = false;
                 reset_btn.Visible = true;
@@ -1210,7 +1239,7 @@ namespace Testris
             {
                 string p_name = "countdown";
                 effect_sound_st(ref p_name);
-                st_label.Text=timer.ToString(); 
+                st_label.Text = timer.ToString();
                 st_wait_timer.Start();
             }
         }
@@ -1232,7 +1261,7 @@ namespace Testris
             cmd = "close " + "BGM";
             mciSendString(cmd, null, 0, IntPtr.Zero);
 
-            string fileName = @"Resources\"+bgm_kind+".mp3";
+            string fileName = @"Resources\" + bgm_kind + ".mp3";
 
             //再生
             cmd = "open \"" + fileName + "\" type mpegvideo alias BGM";
@@ -1242,7 +1271,7 @@ namespace Testris
             cmd = "play BGM" + " repeat";
             mciSendString(cmd, null, 0, IntPtr.Zero);
 
-            cmd = "setaudio BGM"  + " volume to "+User_formation.bgm_volume.ToString();
+            cmd = "setaudio BGM" + " volume to " + User_formation.bgm_volume.ToString();
             mciSendString(cmd, null, 0, IntPtr.Zero);
         }
 
@@ -1278,11 +1307,12 @@ namespace Testris
         }
         private void Check_score()
         {
-            if (User_formation.score<100)
+            if (User_formation.score < 100)
             {
                 soft_drop_timer.Interval = 500;
 
-            }else if (User_formation.score < 200)
+            }
+            else if (User_formation.score < 200)
             {
                 soft_drop_timer.Interval = 300;
             }
