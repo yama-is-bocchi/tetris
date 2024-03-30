@@ -401,8 +401,6 @@ namespace Testris
             else if (e.KeyCode.ToString() == Key_bind.rotate_right)
             {
                 //右回転
-                if (Can_move_left() == false && Can_move_right() == false) return;
-
                 Move_Rotate_right();
 
                 Change_opa_block();
@@ -411,8 +409,6 @@ namespace Testris
             else if (e.KeyCode.ToString() == Key_bind.rotate_left)
             {
                 //左回転
-
-                if (Can_move_left() == false && Can_move_right() == false) return;
 
                 Move_Rotate_left();
 
@@ -622,14 +618,14 @@ namespace Testris
                                     over = true;
                                     break;
                                 }
-                                else if (ret_arr[work_point.Y + i, work_point.X + j] > 0)
+                                else if (ret_arr[work_point.Y + i-up, work_point.X + j] > 0)
                                 {
                                     over = true;
                                     break;
                                 }
                                 else
                                 {
-                                    ret_arr[work_point.Y + i, work_point.X + j] = work_form[i, j] * -1;
+                                    ret_arr[work_point.Y + i-up, work_point.X + j] = work_form[i, j] * -1;
                                 }
 
                             }
@@ -684,7 +680,6 @@ namespace Testris
             }
             else
             {
-                dropped_jud_timer.Start();
                 return;
             }
         }
@@ -727,14 +722,14 @@ namespace Testris
                                     over = true;
                                     break;
                                 }
-                                else if (ret_arr[work_point.Y + i, work_point.X + j] > 0)
+                                else if (ret_arr[work_point.Y + i - up, work_point.X + j] > 0)
                                 {
                                     over = true;
                                     break;
                                 }
                                 else
                                 {
-                                    ret_arr[work_point.Y + i, work_point.X + j] = work_form[i, j] * -1;
+                                    ret_arr[work_point.Y + i - up, work_point.X + j] = work_form[i, j] * -1;
                                 }
 
                             }
@@ -789,7 +784,6 @@ namespace Testris
             }
             else
             {
-                dropped_jud_timer.Start();
                 return;
             }
         }
